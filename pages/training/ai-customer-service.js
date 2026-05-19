@@ -37,35 +37,48 @@ const slides = [
 ];
 
 export default function AICustomerServiceTraining(){
-  const [index,setIndex]=useState(0); const [version,setVersion]=useState(0); const [revealed,setRevealed]=useState({});
-  const slide=slides[index]; const color=COLORS[slide.section]||COLORS.intro;
-  const next=()=>{setVersion(0);setRevealed({});setIndex(p=>Math.min(p+1,slides.length-1));};
-  const prev=()=>{setVersion(0);setRevealed({});setIndex(p=>Math.max(p-1,0));};
+  const [index,setIndex]=useState(0);
+  const [version,setVersion]=useState(0);
+  const [revealed,setRevealed]=useState({});
+  const [modalImage,setModalImage]=useState(null);
+  const slide=slides[index];
+  const color=COLORS[slide.section]||COLORS.intro;
+  const next=()=>{setVersion(0);setRevealed({});setModalImage(null);setIndex(p=>Math.min(p+1,slides.length-1));};
+  const prev=()=>{setVersion(0);setRevealed({});setModalImage(null);setIndex(p=>Math.max(p-1,0));};
+
   return <main style={styles.page}>
-    <header style={styles.topBar}><div><div style={{...styles.kicker,color}}>{slide.section.toUpperCase()}</div><div style={styles.sub}>Slide {index+1} / {slides.length}</div></div>
-      <nav style={styles.nav}><a href="/" style={styles.homeBtn}>Home</a><button style={styles.btn} onClick={prev}>Previous</button><button style={{...styles.btnPrimary,background:color}} onClick={next}>Next</button></nav></header>
-    <section style={styles.container}><h1 style={styles.title}>{slide.title}</h1><p style={styles.subtitle}>{slide.subtitle}</p>
-      {slide.type==="image"&&<ImageSlide slide={slide}/>}
+    <header style={styles.topBar}>
+      <div><div style={{...styles.kicker,color}}>{slide.section.toUpperCase()}</div><div style={styles.sub}>Slide {index+1} / {slides.length}</div></div>
+      <nav style={styles.nav}><a href="/" style={styles.homeBtn}>Home</a><button style={styles.btn} onClick={prev}>Previous</button><button style={{...styles.btnPrimary,background:color}} onClick={next}>Next</button></nav>
+    </header>
+
+    <section style={styles.container}>
+      <h1 style={styles.title}>{slide.title}</h1>
+      <p style={styles.subtitle}>{slide.subtitle}</p>
+      {slide.type==="image"&&<ImageSlide slide={slide} setModalImage={setModalImage}/>}
       {slide.type==="cards"&&<Cards cards={slide.cards} color={color}/>}
-      {slide.type==="agent_intro"&&<AgentIntro slide={slide} color={color}/>}
+      {slide.type==="agent_intro"&&<AgentIntro slide={slide} color={color} setModalImage={setModalImage}/>}
       {slide.type==="agent_benchmark"&&<AgentBenchmark slide={slide}/>}
       {slide.type==="chat"&&<ChatSlide slide={slide} version={version} setVersion={setVersion}/>}
       {slide.type==="project_demo"&&<DemoPrompt slide={slide} color={color}/>}
-      {slide.type==="excel"&&<ExcelSlide slide={slide}/>}
-      {slide.type==="workflow"&&<WorkflowSlide slide={slide} color={color}/>}
+      {slide.type==="excel"&&<ExcelSlide slide={slide} setModalImage={setModalImage}/>}
+      {slide.type==="workflow"&&<WorkflowSlide slide={slide} color={color} setModalImage={setModalImage}/>}
       {slide.type==="prompt"&&<PromptSlide slide={slide} color={color}/>}
       {slide.type==="hub_demo"&&<DemoPrompt slide={slide} color={color}/>}
       {slide.type==="quiz"&&<Quiz cards={slide.cards} revealed={revealed} setRevealed={setRevealed}/>}
-    </section></main>;
+    </section>
+
+    {modalImage&&<div style={styles.modal} onClick={()=>setModalImage(null)}><img src={modalImage} alt="fullscreen" style={styles.modalImage}/></div>}
+  </main>;
 }
 
-function ImageSlide({slide}){return <div style={styles.heroImageWrap}><img src={slide.image} alt={slide.title} style={styles.heroImage}/></div>;}
+function ImageSlide({slide,setModalImage}){return <div style={styles.heroImageWrap} onClick={()=>setModalImage&&setModalImage(slide.image)}><img src={slide.image} alt={slide.title} style={styles.heroImage}/><div style={styles.clickHint}>Click to open fullscreen</div></div>;}
 function Cards({cards,color}){return <div style={styles.grid3}>{cards.map(c=><div key={c[0]} style={{...styles.white,borderTop:`8px solid ${color}`}}><h2>{c[0]}</h2><p style={styles.cardText}>{c[1]}</p>{c[2]&&<p style={styles.smallText}>{c[2]}</p>}</div>)}</div>;}
-function AgentIntro({slide,color}){return <div style={styles.twoCols}><ImageSlide slide={slide}/><div style={{...styles.highlight,background:color}}><p style={styles.bigText}>{slide.text}</p></div></div>;}
+function AgentIntro({slide,color,setModalImage}){return <div style={styles.twoCols}><ImageSlide slide={slide} setModalImage={setModalImage}/><div style={{...styles.highlight,background:color}}><p style={styles.bigText}>{slide.text}</p></div></div>;}
 function AgentBenchmark({slide}){return <><div style={styles.grid4}>{slide.cards.map(c=>{const manual=c[0].toLowerCase().includes("manual");return <div key={c[0]} style={manual?styles.redCard:styles.white}><h2>{c[0]}</h2><p style={styles.cardText}>{c[1]}</p></div>})}</div><PromptSlide slide={slide} color={COLORS.agent}/></>;}
 function ChatSlide({slide,version,setVersion}){const cur=slide.versions[version];return <div style={styles.twoCols}><div style={{...styles.white,background:"#fee2e2"}}><div style={styles.kickerDark}>Original customer message</div><p style={styles.bigText}>“{slide.original}”</p></div><div style={styles.white}><div style={styles.tabs}>{slide.versions.map((v,i)=><button key={v[0]} onClick={()=>setVersion(i)} style={i===version?styles.tabActive:styles.tab}>{v[0]}</button>)}</div><div style={styles.toneBox}>{cur[1]}</div><p style={styles.bigText}>“{cur[2]}”</p></div></div>;}
-function ExcelSlide({slide}){return <div style={styles.twoCols}><ImageSlide slide={slide}/><div style={styles.grid2}>{slide.bullets.map(b=><div key={b} style={styles.card}>{b}</div>)}</div></div>;}
-function WorkflowSlide({slide,color}){return <div style={styles.twoCols}><ImageSlide slide={slide}/><div><div style={styles.grid2}>{slide.bullets.map(b=><div key={b} style={styles.card}>{b}</div>)}</div><div style={{...styles.highlight,background:color,marginTop:20}}><p style={styles.bigText}>{slide.text}</p></div></div></div>;}
+function ExcelSlide({slide,setModalImage}){return <div style={styles.twoCols}><ImageSlide slide={slide} setModalImage={setModalImage}/><div style={styles.grid2}>{slide.bullets.map(b=><div key={b} style={styles.card}>{b}</div>)}</div></div>;}
+function WorkflowSlide({slide,color,setModalImage}){return <div style={styles.twoCols}><ImageSlide slide={slide} setModalImage={setModalImage}/><div><div style={styles.grid2}>{slide.bullets.map(b=><div key={b} style={styles.card}>{b}</div>)}</div><div style={{...styles.highlight,background:color,marginTop:20}}><p style={styles.bigText}>{slide.text}</p></div></div></div>;}
 function DemoPrompt({slide,color}){return <div style={styles.twoCols}><div style={styles.grid2}>{slide.steps.map((s,i)=><div key={s} style={styles.card}>{i+1}. {s}</div>)}</div><PromptSlide slide={slide} color={color}/></div>;}
 function PromptSlide({slide,color}){return <div style={{...styles.highlight,background:color,marginTop:24}}><div style={styles.kickerDark}>Prompt to try</div><pre style={styles.promptText}>{slide.prompt}</pre></div>;}
 function Quiz({cards,revealed,setRevealed}){return <div style={styles.grid5}>{cards.map((c,i)=><button key={c[0]} style={styles.quizCard} onClick={()=>setRevealed(r=>({...r,[i]:!r[i]}))}><p style={styles.smallText}>{c[0]}</p><h2>{revealed[i]?c[1]:"Click to reveal"}</h2></button>)}</div>;}
@@ -77,13 +90,16 @@ kicker:{textTransform:"uppercase",letterSpacing:3,fontSize:13,fontWeight:950},ki
 nav:{display:"flex",gap:12,alignItems:"center"},homeBtn:{padding:"10px 16px",borderRadius:12,border:"1px solid rgba(255,255,255,.2)",background:"rgba(255,255,255,.12)",color:"white",fontWeight:900,cursor:"pointer",textDecoration:"none"},
 btn:{padding:"10px 16px",borderRadius:12,border:"1px solid rgba(255,255,255,.2)",background:"rgba(255,255,255,.08)",color:"white",fontWeight:800,cursor:"pointer"},btnPrimary:{padding:"10px 16px",borderRadius:12,border:"none",color:"#0f172a",fontWeight:950,cursor:"pointer"},
 container:{maxWidth:1400,margin:"0 auto",padding:"38px 28px 80px"},title:{fontSize:"clamp(44px,7vw,96px)",lineHeight:.95,margin:0,fontWeight:1000,letterSpacing:-3},subtitle:{fontSize:"clamp(20px,2vw,30px)",color:"#cbd5e1",marginTop:18,marginBottom:28,fontWeight:700},
-heroImageWrap:{marginTop:26,width:"100%",borderRadius:28,overflow:"hidden",boxShadow:"0 30px 90px rgba(0,0,0,.45)",border:"1px solid rgba(255,255,255,.18)",background:"#020617",display:"flex",justifyContent:"center",alignItems:"center"},
+heroImageWrap:{position:"relative",marginTop:26,width:"100%",borderRadius:28,overflow:"hidden",boxShadow:"0 30px 90px rgba(0,0,0,.45)",border:"1px solid rgba(255,255,255,.18)",background:"#020617",display:"flex",justifyContent:"center",alignItems:"center",cursor:"pointer"},
 heroImage:{display:"block",width:"100%",height:"auto",maxHeight:"calc(100vh - 185px)",objectFit:"contain",background:"#020617"},
+clickHint:{position:"absolute",right:18,bottom:16,padding:"8px 12px",borderRadius:999,background:"rgba(0,0,0,.62)",color:"white",fontSize:13,fontWeight:900},
 twoCols:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:24,marginTop:34},grid2:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16},grid3:{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:18,marginTop:34},grid4:{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:18,marginTop:34},grid5:{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:16,marginTop:34},
 white:{background:"white",color:"#0f172a",borderRadius:26,padding:26,boxShadow:"0 20px 50px rgba(0,0,0,.24)"},card:{background:"rgba(255,255,255,.1)",border:"1px solid rgba(255,255,255,.14)",color:"white",borderRadius:22,padding:22,minHeight:130,fontSize:22,fontWeight:900,lineHeight:1.25},
 redCard:{background:"#fee2e2",color:"#991b1b",borderRadius:26,padding:26,border:"3px solid #ef4444",boxShadow:"0 20px 50px rgba(127,29,29,.25)"},highlight:{color:"#0f172a",borderRadius:28,padding:30,fontWeight:900,boxShadow:"0 20px 50px rgba(0,0,0,.25)"},
 cardText:{fontSize:22,lineHeight:1.25,fontWeight:850},smallText:{color:"#0e7490",fontSize:17,lineHeight:1.35,fontWeight:850},bigText:{fontSize:28,lineHeight:1.25,fontWeight:900},
 tabs:{display:"flex",flexWrap:"wrap",gap:10,marginBottom:22},tab:{border:"none",borderRadius:12,padding:"10px 14px",background:"#e2e8f0",fontWeight:900,cursor:"pointer"},tabActive:{border:"none",borderRadius:12,padding:"10px 14px",background:"#3b82f6",color:"white",fontWeight:900,cursor:"pointer"},
 toneBox:{background:"#dbeafe",padding:14,borderRadius:16,marginBottom:18,color:"#1e3a8a",fontWeight:900},promptText:{whiteSpace:"pre-wrap",fontFamily:"Arial, Helvetica, sans-serif",fontSize:18,lineHeight:1.42,fontWeight:800,margin:"14px 0 0"},
-quizCard:{background:"white",color:"#0f172a",borderRadius:26,padding:22,border:"none",cursor:"pointer",minHeight:210,textAlign:"left",boxShadow:"0 20px 50px rgba(0,0,0,.24)"}
+quizCard:{background:"white",color:"#0f172a",borderRadius:26,padding:22,border:"none",cursor:"pointer",minHeight:210,textAlign:"left",boxShadow:"0 20px 50px rgba(0,0,0,.24)"},
+modal:{position:"fixed",inset:0,zIndex:9999,background:"rgba(0,0,0,.94)",display:"flex",alignItems:"center",justifyContent:"center",padding:32,cursor:"pointer"},
+modalImage:{maxWidth:"100%",maxHeight:"100%",objectFit:"contain",borderRadius:12}
 };
