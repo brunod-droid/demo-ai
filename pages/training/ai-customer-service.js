@@ -650,6 +650,7 @@ const styles = {
   nav: { display: "flex", gap: 10 },
   btn: { padding: "10px 16px", borderRadius: 12, border: "1px solid rgba(255,255,255,.2)", background: "rgba(255,255,255,.08)", color: "white", fontWeight: 800, cursor: "pointer" },
   btnPrimary: { padding: "10px 16px", borderRadius: 12, border: "none", color: "#0f172a", fontWeight: 900, cursor: "pointer" },
+  homeBtn: {padding: "10px 16px",borderRadius: 12,border: "1px solid rgba(255,255,255,.2)",background: "rgba(255,255,255,.12)",color: "white",fontWeight: 900,cursor: "pointer",textDecoration: "none",},
   slide: { maxWidth: 1280, margin: "0 auto", padding: "42px 34px" },
   title: { fontSize: "clamp(44px,6vw,78px)", lineHeight: 1, margin: "18px 0", fontWeight: 950 },
   subtitle: { fontSize: "clamp(22px,2.4vw,34px)", color: "#b8c7d9", lineHeight: 1.25, maxWidth: 1050 },
