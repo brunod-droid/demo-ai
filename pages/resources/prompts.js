@@ -1,0 +1,9 @@
+import Layout from "../layout";
+const prompts=[
+["Competitor Benchmark","Act as a competitor benchmark assistant. Compare Pandora, Kendra Scott, Mint&Lily, Tiny Tags, James Avery, GLDN, Made by Mary and Haverhill. Summarize promotions, launches, pricing signals, messaging and customer-facing changes. Return a table and a 5-line email digest."],
+["Board-ready Project Output","Transform the analysis into a board-ready executive presentation. Keep only top customer insights, main risks, competitor opportunities, launch priorities and recommended next actions. Use short executive language and clear prioritization."],
+["Excel Improvement","Analyze this file. Identify duplicates, blank cells and inconsistent values. Explain why they matter. Suggest formulas or concatenations to improve it. Then propose 3 automation opportunities."],
+["Hub Page Creation","Transform this document into a Hub page with overview, key process, FAQ, risks, escalation rules, owner actions and training summary."]
+];
+export default function Prompts(){return <Layout><section style={styles.wrap}><h1 style={styles.title}>Prompt Library</h1><p style={styles.subtitle}>Copy, paste, adapt, and reuse.</p><div style={styles.grid}>{prompts.map(([title,prompt])=><div key={title} style={styles.card}><h2>{title}</h2><pre style={styles.prompt}>{prompt}</pre></div>)}</div></section></Layout>;}
+const styles={wrap:{maxWidth:1180,margin:"0 auto",padding:"64px 34px"},title:{fontSize:72,margin:0,fontWeight:1000},subtitle:{color:"#b8c7d9",fontSize:24},grid:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:22,marginTop:34},card:{background:"white",color:"#0f172a",borderRadius:28,padding:26},prompt:{whiteSpace:"pre-wrap",fontFamily:"Arial,Helvetica,sans-serif",fontSize:17,lineHeight:1.5,background:"#f1f5f9",padding:18,borderRadius:18}};
