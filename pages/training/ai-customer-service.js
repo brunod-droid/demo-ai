@@ -304,6 +304,7 @@ export default function AICustomerServiceTraining() {
           <div style={styles.progress}>Slide {i + 1} / {slides.length}</div>
         </div>
         <div style={styles.nav}>
+          <a href="/" style={styles.homeBtn}>Home</a>
           <button style={styles.btn} onClick={prev}>Previous</button>
           <button style={{ ...styles.btnPrimary, background: currentColor }} onClick={next}>Next</button>
         </div>
@@ -864,8 +865,37 @@ const styles = {
     fontWeight: 900,
   },
 
-  heroImageWrap: { marginTop: 26, width: "100%", borderRadius: 28, overflow: "hidden", boxShadow: "0 30px 90px rgba(0,0,0,.45)", border: "1px solid rgba(255,255,255,.18)", background: "#020617" },
-  heroImage: { display: "block", width: "100%", height: "calc(100vh - 190px)", minHeight: 640, objectFit: "cover" },
+  heroImageWrap: {
+    marginTop: 26,
+    width: "100%",
+    borderRadius: 28,
+    overflow: "hidden",
+    boxShadow: "0 30px 90px rgba(0,0,0,.45)",
+    border: "1px solid rgba(255,255,255,.18)",
+    background: "#020617",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  heroImage: {
+    display: "block",
+    width: "100%",
+    height: "auto",
+    maxHeight: "calc(100vh - 170px)",
+    objectFit: "contain",
+    background: "#020617",
+  },
 
   redWarningCard: { background: "#fee2e2", color: "#991b1b", borderRadius: 24, padding: 24, fontSize: 25, fontWeight: 950, border: "3px solid #ef4444", boxShadow: "0 18px 42px rgba(127,29,29,.25)" },
+
+  homeBtn: {
+    padding: "10px 16px",
+    borderRadius: 12,
+    border: "1px solid rgba(255,255,255,.2)",
+    background: "rgba(255,255,255,.12)",
+    color: "white",
+    fontWeight: 900,
+    cursor: "pointer",
+    textDecoration: "none",
+  },
 };

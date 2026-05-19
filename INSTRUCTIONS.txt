@@ -1,0 +1,11 @@
+Copy these folders/files into the root of your GitHub repo.
+Replace existing files when asked.
+
+Main replacement:
+- pages/training/ai-customer-service.js
+
+Public assets included if available:
+- public/ai-work-hero.png
+- public/10-commandments-ai.png
+
+Then commit to GitHub and Vercel will redeploy.
