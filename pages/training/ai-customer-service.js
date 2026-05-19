@@ -304,10 +304,21 @@ export default function AICustomerServiceTraining() {
           <div style={styles.progress}>Slide {i + 1} / {slides.length}</div>
         </div>
         <div style={styles.nav}>
-          <a href="/" style={styles.homeBtn}>Home</a>
-          <button style={styles.btn} onClick={prev}>Previous</button>
-          <button style={{ ...styles.btnPrimary, background: currentColor }} onClick={next}>Next</button>
-        </div>
+  <a href="/" style={styles.homeBtn}>
+    Home
+  </a>
+
+  <button style={styles.btn} onClick={prev}>
+    Previous
+  </button>
+
+  <button
+    style={{ ...styles.btnPrimary, background: currentColor }}
+    onClick={next}
+  >
+    Next
+  </button>
+</div>
       </header>
 
       <section style={styles.slide}>
